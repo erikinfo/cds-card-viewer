@@ -17,8 +17,10 @@ export class CdsCard {
    */
   @Prop() card!: string;
   @Watch('card')
-  validateCard() {
-    if (this.card == null) { throw new Error('card: required'); }
+  validateCard(newValue: string) {
+    //if (this.card == null) { throw new Error('card: required'); }
+    if (newValue == null) { throw new Error('card: required'); }
+    this.parseCard();
   }
   /**
    * If `true`, the component will show the proposed actions. 
@@ -62,7 +64,7 @@ export class CdsCard {
 
   async componentWillLoad(): Promise<void> {
     try {
-      this.validateCard();
+      //this.validateCard();
       this.parseCard();
       this.strings = await getLocaleComponentStrings(this.element, this.locale);
 
