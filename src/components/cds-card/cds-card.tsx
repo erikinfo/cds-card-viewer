@@ -18,9 +18,9 @@ export class CdsCard {
   @Prop() card!: string;
   @Watch('card')
   validateCard(newValue: string) {
-    //if (this.card == null) { throw new Error('card: required'); }
     if (newValue == null) { throw new Error('card: required'); }
     this.parseCard();
+    //if (this.card == null) { throw new Error('card: required'); }
   }
   /**
    * If `true`, the component will show the proposed actions. 
