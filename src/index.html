@@ -21,6 +21,14 @@
     var url = 'http://localhost:8082/cds-services/trials/1';
     console.log("URL: " + url);
 
+    const colors = [
+      "#E3F2FD",  // Lightest blue
+      "#BBDEFB",
+      "#90CAF9",
+      "#64B5F6",
+      "#42A5F5",  // Medium blue
+    ];
+
     // Set an interval to make the request every 5 seconds (5000 milliseconds)
     setInterval(() => {
       fetch(url)
@@ -33,6 +41,15 @@
           return response.json();
         })
         .then(json => {
+
+          // Add the style field to every suggestion
+          if (json.suggestions) {
+            json.suggestions.forEach((suggestion, index) => {
+            // Choose color based on index, loop if there are more suggestions than colors
+            const color = colors[index % colors.length];
+            suggestion.style = {"background-color": color};
+          });
+          }
           // This will find the 'cds-card' component by its id and set the 'card' attribute
           console.log(JSON.stringify(json));
           document.getElementById('myCdsCard').setAttribute('card', JSON.stringify(json));
