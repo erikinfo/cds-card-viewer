@@ -14,63 +14,50 @@
 </head>
 
 <body>
+  <cds-card id="myCdsCard" show-suggestion-actions="true"></cds-card>
+
+  <script>
+    // Define the URL of your SpringBoot application
+    var url = 'http://localhost:8082/cds-services/trials/1';
+    console.log("URL: " + url);
+
+    const colors = [
+      "#E3F2FD",  // Lightest blue
+      "#BBDEFB",
+      "#90CAF9",
+      "#64B5F6",
+      "#42A5F5",  // Medium blue
+    ];
 
     // Set an interval to make the request every 5 seconds (5000 milliseconds)
     setInterval(() => {
       fetch(url)
-        .then(response => {
-          console.log(response);
-          if (!response.ok) {
-            throw new Error("HTTP error " + response.status);
-          }
-        },{
-          "type":"update",
-          "description":"Based on condition and subtype, the patient could be enrolled to a clinical trial",
-          "resource":{
-            "resourceType":"Task"
-          }
-        },{
-          "type":"delete",
-          "description":"Based on condition and subtype, the patient could be enrolled to a clinical trial",
-          "resource":{
-            "resourceType":"Task"
-          }
-        }]
-      },
-      {
-        "label":"| Title | Radio-Immunotherapy Before Cystectomy in Locally Advanced Urothelial Carcinoma of the Bladder |\r\n| ------ | ------ |\r\n| Status | **active** |\r\n| Intervention | **Folfiri** |\r\n| Sites | * Klinikum rechts der Isar der Technischen Universit\u00E4t M\u00FCnchen,</br> * Universit\u00E4tsklinikum W\u00FCrzburg |",
-        "uuid":"e1187895-ad57-4ff7-a1f1-ccf954b2fe46",
-        "actions":[{
-          "type":"delete",
-          "description":"Based on condition and subtype, the patient could be enrolled to a clinical trial",
-          "resource":{
-            "resourceType":"Task"
-          }
-        }]
-      }],
-      "selectionBehavior":"at-most-one",
-      "links":[
-        {
-          "label":"Adjuvant Aspirin Treatment in PIK3CA Mutated Colon Cancer Patients. A Randomized, Double-blinded, Placebo-controlled, Phase III Trial",
-          "url":"https://clinicaltrials.gov/ct2/show/NCT02467582",
-          "type":"Clinical Trial",
-          "appContext":null
-        },{
-          "label":"A Phase IIb Study of RAMucirumab in Combination With TAS102 vs. TAS102 Monotherapy in Chemotherapy Refractory Metastatic Colorectal Cancer Patients",
-          "url":"https://clinicaltrials.gov/ct2/show/NCT03520946",
-          "type":"Clinical Trial",
-          "appContext":null
-        },{
-          "label":"A Phase 1b/2 Study of BMS-813160 in Combination With Chemotherapy or Nivolumab in Patients With Advanced Solid Tumors",
-          "url":"https://clinicaltrials.gov/ct2/show/NCT03184870",
-          "type":"Clinical Trial",
-          "appContext":null
-        }
-      ]
-      }' show-suggestion-actions="true"></cds-card>
-  <!--  <cds-card card='{"summary":"No Studies can be suggested.","detail":"No subtype found for patient","indicator":"critical","source":null,"suggestions":null,"selectionBehavior":null,"links":null}' />
--->
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
+    }
+    return response.json();
+  })
+  .then(json => {
+    if (json.suggestions) {
+      json.suggestions.forEach((suggestion, index) => {
+        // Choose color based on index, loop if there are more suggestions than colors
+        const color = colors[index % colors.length];
+        suggestion.style = {"background-color": color};
+      });
+    }
 
+    document.getElementById('myCdsCard').setAttribute('show-suggestion-actions', 'true');
+    document.getElementById('myCdsCard').setAttribute('card', JSON.stringify(json));
+  })
+  .catch(function() {
+    console.log("Fetch error. Please check the URL and your network connection.");
+  });
+      
+
+
+    }, 5000);
+  </script>
 </body>
 
 </html>
